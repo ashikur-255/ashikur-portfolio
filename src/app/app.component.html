@@ -1,0 +1,451 @@
+<a class="skip-link" href="#top">Skip to content</a>
+
+<div class="page" [class.dark]="isDarkMode">
+
+  <!-- SCROLL PROGRESS INDICATOR -->
+  <div class="scroll-progress" [style.width.%]="scrollProgress"></div>
+
+  <!-- BACKGROUND PARTICLES -->
+  <div class="particles-container" aria-hidden="true">
+    <div
+      class="particle"
+      *ngFor="let p of particles"
+      [style.left.%]="p.x"
+      [style.top.%]="p.y"
+      [style.width.px]="p.size"
+      [style.height.px]="p.size"
+      [style.opacity]="p.opacity"
+    ></div>
+  </div>
+
+  <!-- TOAST -->
+  <div
+    class="toast"
+    role="status"
+    aria-live="polite"
+    [class.toast--visible]="toast.visible"
+    [class.toast--error]="toast.type === 'error'"
+  >
+    <span>{{ toast.message }}</span>
+  </div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a class="nav__brand" href="#top" (click)="closeMenu()">
+      <span class="nav__mark">AR</span>
+      <span class="nav__name">Ashikur<em>.</em></span>
+    </a>
+
+    <button class="theme-toggle" (click)="toggleTheme()" aria-label="Toggle theme">
+      {{ isDarkMode ? '☀️' : '🌙' }}
+    </button>
+
+    <nav class="nav__links" [class.nav__links--open]="menuOpen">
+      <a
+        *ngFor="let link of navLinks"
+        [href]="link.href"
+        [class.active]="activeSection === link.href.slice(1)"
+        (click)="closeMenu()"
+      >
+        {{ link.label }}
+      </a>
+      <a class="nav__cta" href="#contact" (click)="closeMenu()">Let's talk</a>
+    </nav>
+
+    <button
+      class="nav__toggle"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuOpen"
+      aria-label="Toggle menu"
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main id="top">
+
+    <!-- ═══════════ HERO ═══════════ -->
+    <section class="hero">
+      <div class="hero__copy">
+        <p class="eyebrow">👋 Welcome to my portfolio</p>
+        <h1 class="hero__title">
+          I'm <span class="highlight">{{ name }}</span><br />
+          <span class="typing-role">{{ displayedRole }}<span class="cursor">|</span></span>
+        </h1>
+        <p class="hero__lede">{{ bio }}</p>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#projects">View my work</a>
+          <a class="btn btn--ghost"   href="#contact">Get in touch</a>
+          <button class="btn btn--secondary" (click)="toggleResumeModal()">👁 Preview CV</button>
+         
+        </div>
+
+        <div class="hero__meta">
+          <span>📍 {{ location }}</span>
+          <span>🟣 Currently at Islamic Development Bank (BISEW)</span>
+        </div>
+      </div>
+
+      <!-- HERO VISUAL / PROFILE IMAGE -->
+      <div class="hero__visual">
+        <div class="profile-card">
+          <div class="profile-image-wrapper">
+            <img
+              class="profile-image"
+              [src]="profileImage"
+              [alt]="name + ' profile photo'"
+              (error)="onImageError($event)"
+            />
+            <div class="profile-status" aria-label="Available for work"></div>
+          </div>
+          <h2 class="profile-name">{{ name }}</h2>
+          <p class="profile-role">{{ title }}</p>
+          <p class="profile-location">{{ location }}</p>
+        </div>
+
+        <!-- STACK VISUAL -->
+        <div class="stack" aria-label="Diagram of Ashikur's technology stack">
+          <div
+            class="stack__layer"
+            *ngFor="let layer of stackLayers; let i = index"
+            [style.--i]="i"
+          >
+            <div class="stack__bar">
+              <span class="stack__label">{{ layer.label }}</span>
+              <span class="stack__detail">{{ layer.detail }}</span>
+            </div>
+          </div>
+          <span class="stack__caption">Full stack, top to bottom</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ STATS ═══════════ -->
+    <div class="section--stats">
+      <div #reveal class="reveal stats-trigger">
+        <div class="stats-grid">
+          <div class="stat-item" *ngFor="let stat of statsList">
+            <div class="stat-number" [attr.data-target]="stat.value">0</div>
+            <div class="stat-label">{{ stat.key }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ ABOUT ═══════════ -->
+    <section id="about" class="section">
+      <div #reveal class="reveal">
+        <h2 class="section__title"><span class="section__index">01</span> About</h2>
+        <div class="about__grid">
+          <div>
+            <p class="about__text">{{ bio }}</p>
+            <p class="about__text mt-2">
+              I'm comfortable owning a feature end-to-end — from a database schema and API,
+              through to the interface someone actually clicks on — and I like the discipline
+              of writing code that's easy for the next person to maintain.
+            </p>
+          </div>
+          <ul class="about__facts">
+            <li><span>Based in</span>     <strong>{{ location }}</strong></li>
+            <li><span>Focus</span>        <strong>ASP.NET Core MVC | WEB API &amp; C#</strong></li>
+            <li><span>Also building with</span><strong>JavaScript &amp; SQL Server</strong></li>
+            <li><span>Open to</span>      <strong>Full stack roles &amp; freelance</strong></li>
+            <li><span>Experience</span>   <strong>1+ Years</strong></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ SKILLS ═══════════ -->
+    <section id="skills" class="section section--alt">
+      <div #reveal class="reveal">
+        <h2 class="section__title"><span class="section__index">02</span> Skills</h2>
+
+        <div class="skills">
+          <div class="skills__group" *ngFor="let group of skillGroups">
+            <h3 class="skills__title">{{ group.title }}</h3>
+            <div class="skills__tags">
+              <code class="tag" *ngFor="let item of group.items">{{ item }}</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="proficiency mt-4">
+          <div class="proficiency__heading">
+            <div>
+              <h3 class="skills__title">Proficiency</h3>
+              <p class="proficiency__intro">Hover a cube to explore my confidence across the stack.</p>
+            </div>
+            <span class="proficiency__badge">12 CORE SKILLS</span>
+          </div>
+          <div class="proficiency-grid">
+            <article class="skill-cube" *ngFor="let skill of detailedSkills; let i = index"
+              [style.--skill-level]="skill.level + '%'" [style.--delay]="(i * 70) + 'ms'">
+              <div class="skill-cube__glow"></div>
+              <div class="skill-cube__top"></div>
+              <div class="skill-cube__body">
+                <span class="skill-cube__icon">{{ skill.name.charAt(0) }}</span>
+                <span class="skill-cube__name">{{ skill.name }}</span>
+                <strong class="skill-cube__percent">{{ skill.level }}%</strong>
+              </div>
+              <div class="skill-cube__bottom"><span>Achievement</span><span>{{ skill.level }}%</span></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ EXPERIENCE ═══════════ -->
+    <section id="experience" class="section">
+      <div #reveal class="reveal">
+        <h2 class="section__title"><span class="section__index">03</span> Experience</h2>
+        <ol class="timeline">
+          <li class="timeline__item" *ngFor="let job of experience">
+            <div class="timeline__dot" [class.timeline__dot--active]="job.current"></div>
+            <div class="timeline__body">
+              <div class="timeline__head">
+                <h3>{{ job.role }}</h3>
+                <span class="timeline__period">{{ job.period }}</span>
+              </div>
+              <p class="timeline__company">{{ job.company }}</p>
+              <ul class="timeline__points">
+                <li *ngFor="let point of job.points">{{ point }}</li>
+              </ul>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ═══════════ EDUCATION ═══════════ -->
+    <section id="education" class="section section--alt">
+      <div #reveal class="reveal">
+        <h2 class="section__title"><span class="section__index">04</span> Education</h2>
+        <div class="education">
+          <div class="education__item glass-effect" *ngFor="let ed of education">
+            <h3>{{ ed.degree }}</h3>
+            <p>{{ ed.school }}</p>
+            <span>{{ ed.year }} · {{ ed.score }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ CERTIFICATIONS ═══════════ -->
+    <section id="certifications" class="section">
+      <div #reveal class="reveal">
+        <h2 class="section__title"><span class="section__index">05</span> Certifications</h2>
+        <div class="certifications-grid">
+          <div class="certification-card glass-effect" *ngFor="let cert of certifications">
+            <div class="certification-icon">🏆</div>
+            <h3>{{ cert.name }}</h3>
+            <p>{{ cert.issuer }}</p>
+            <span class="certification-year">{{ cert.year }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ ACHIEVEMENTS ═══════════ -->
+    <section class="section section--alt">
+      <div #reveal class="reveal">
+        <h2 class="section__title"><span class="section__index">06</span> Achievements</h2>
+        <div class="achievements-grid">
+          <article class="achievement-card glass-effect" *ngFor="let a of achievements">
+            <div class="achievement-card__ring" [style.--achievement]="a.percentage + '%'">
+              <span class="achievement-icon">{{ a.icon }}</span>
+              <strong>{{ a.percentage }}%</strong>
+            </div>
+            <div class="achievement-card__content">
+              <h3>{{ a.title }}</h3>
+              <p>{{ a.description }}</p>
+              <div class="achievement-meter" aria-hidden="true"><span [style.width.%]="a.percentage"></span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ PROJECTS ═══════════ -->
+    <section id="projects" class="section">
+      <div #reveal class="reveal">
+        <h2 class="section__title"><span class="section__index">07</span> Projects</h2>
+        <div class="projects">
+          <div class="project glass-effect" *ngFor="let p of projects">
+            <div class="project__image" *ngIf="p.image">
+              <img [src]="p.image" [alt]="p.name + ' screenshot'" width="800" height="450" loading="lazy" decoding="async" (error)="onImageError($event, p.name + ' project preview')" />
+            </div>
+            <div class="project__top">
+              <h3>{{ p.name }}</h3>
+              <div class="project__links">
+                <a [href]="p.link" target="_blank" rel="noopener" class="project__link" title="View on GitHub">
+                  <span class="project__arrow">↗</span>
+                </a>
+              </div>
+            </div>
+            <p class="project__tagline">{{ p.tagline }}</p>
+            <p class="project__desc">{{ p.description }}</p>
+            <div class="project__tech">
+              <code class="tag tag--sm" *ngFor="let t of p.tech">{{ t }}</code>
+            </div>
+            <div class="project__actions">
+              <a [href]="p.link" target="_blank" rel="noopener" class="btn btn--sm btn--primary">View Code</a>
+            </div>
+          </div>
+        </div>
+        <p class="projects__note">🔗 All projects are available on my GitHub profile.</p>
+      </div>
+    </section>
+
+    <!-- ═══════════ CONTACT ═══════════ -->
+    <section id="contact" class="section section--contact">
+      <div #reveal class="reveal">
+        <h2 class="section__title"><span class="section__index">08</span> Contact</h2>
+        <h3 class="contact__headline">
+          Have a project in mind? <span class="grad-text">Let's build it.</span>
+        </h3>
+        <p class="contact__sub">
+          I'm currently open to new opportunities and freelance work.
+          Fill out the form below, or reach me directly.
+        </p>
+
+        <div class="contact__grid">
+          <button class="contact__card glass-effect" type="button" (click)="copyToClipboard(email, 'Email')">
+            <span class="contact__icon">📧</span>
+            <span class="contact__label">Email · tap to copy</span>
+            <span class="contact__value">{{ email }}</span>
+          </button>
+          <button class="contact__card glass-effect" type="button" (click)="copyToClipboard(phone, 'Phone number')">
+            <span class="contact__icon">📞</span>
+            <span class="contact__label">Phone | WhatsApp · tap to copy</span>
+            <span class="contact__value">{{ phone }}</span>
+          </button>
+          <a class="contact__card glass-effect" [href]="linkedin" target="_blank" rel="noopener">
+            <span class="contact__icon">💼</span>
+            <span class="contact__label">LinkedIn</span>
+            <span class="contact__value">www.linkedin.com/in/ashikur-rahman-134300159</span>
+          </a>
+          <a class="contact__card glass-effect" [href]="github" target="_blank" rel="noopener">
+            <span class="contact__icon">🐙</span>
+            <span class="contact__label">GitHub</span>
+            <span class="contact__value">https://github.com/ashikur-255</span>
+          </a>
+        </div>
+
+        <div class="contact-form-wrapper">
+          <form class="contact-form glass-effect" (ngSubmit)="submitForm()" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cf-name">Name</label>
+                <input
+                  id="cf-name"
+                  type="text"
+                  name="name"
+                  [(ngModel)]="contactForm.name"
+                  (ngModelChange)="clearFieldError('name')"
+                  [class.invalid]="formErrors.name"
+                  placeholder="Your name"
+                  autocomplete="name"
+                />
+                <span class="form-error" *ngIf="formErrors.name">{{ formErrors.name }}</span>
+              </div>
+              <div class="form-group">
+                <label for="cf-email">Email</label>
+                <input
+                  id="cf-email"
+                  type="email"
+                  name="email"
+                  [(ngModel)]="contactForm.email"
+                  (ngModelChange)="clearFieldError('email')"
+                  [class.invalid]="formErrors.email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                />
+                <span class="form-error" *ngIf="formErrors.email">{{ formErrors.email }}</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="cf-subject">Subject <span class="optional">(optional)</span></label>
+              <input
+                id="cf-subject"
+                type="text"
+                name="subject"
+                [(ngModel)]="contactForm.subject"
+                placeholder="What's this about?"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="cf-message">Message</label>
+              <textarea
+                id="cf-message"
+                name="message"
+                rows="5"
+                [(ngModel)]="contactForm.message"
+                (ngModelChange)="clearFieldError('message')"
+                [class.invalid]="formErrors.message"
+                placeholder="Tell me a bit about your project..."
+              ></textarea>
+              <span class="form-error" *ngIf="formErrors.message">{{ formErrors.message }}</span>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--full" [disabled]="isSubmitting">
+              <span *ngIf="!isSubmitting && !formSubmitted">Send message</span>
+              <span *ngIf="isSubmitting">Sending…</span>
+              <span *ngIf="formSubmitted && !isSubmitting">✓ Sent — thank you!</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__content">
+      <span>© {{ currentYear }} {{ name }}. Built with Angular ❤️</span>
+      <div class="footer__social">
+        <a [href]="linkedin" target="_blank" rel="noopener">LinkedIn</a>
+        <a [href]="github"   target="_blank" rel="noopener">GitHub</a>
+        <a [href]="'mailto:' + email">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BACK TO TOP -->
+  <button
+    class="back-to-top"
+    [class.visible]="showBackToTop"
+    (click)="scrollToTop()"
+    aria-label="Back to top"
+  >
+    ↑
+  </button>
+
+  <!-- RESUME PREVIEW MODAL -->
+  <div
+    class="modal-overlay"
+    *ngIf="showResumeModal"
+    (click)="toggleResumeModal()"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Resume preview"
+  >
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button class="modal__close" (click)="toggleResumeModal()" aria-label="Close preview">✕</button>
+      <div class="resume-preview">
+        <div class="resume-preview__icon">PDF</div>
+        <h3>Ashikur Rahman — Curriculum Vitae</h3>
+        <p>Open the CV in a new tab to preview it, or download the original PDF.</p>
+        <a class="btn btn--secondary" [href]="resumeUrl" target="_blank" rel="noopener">👁 Open CV</a>
+      </div>
+      <div class="modal__actions">
+        <button class="btn btn--primary" (click)="downloadResume()">📄 Download full PDF</button>
+      </div>
+    </div>
+  </div>
+
+</div>
