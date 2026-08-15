@@ -69,7 +69,7 @@ cd ashikur-portfolio/portfolio
 npm install
 ```
 
-### Add your assets
+### Add assets
 
 Place the following files in `src/assets/` (exact filenames, no spaces):
 
